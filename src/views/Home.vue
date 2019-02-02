@@ -1,13 +1,14 @@
 <template>
-  <HelloWorld />
+  <div class="home">
+    <h1>home page</h1>
+    <v-btn depressed color="pink" dark>test</v-btn>
+  </div>
 </template>
 
 <script>
-  import HelloWorld from '../components/HelloWorld'
 
   export default {
     components: {
-      HelloWorld
     }
   }
 </script>
