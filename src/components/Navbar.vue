@@ -31,7 +31,7 @@
 export default {
     data() {
         return {
-            drawer: true,
+            drawer: false,
             links: [
                 {icon: 'dashboard', text: 'Dashboard', route:'/'},
                 {icon: 'folder', text: 'My-projects', route:'/projects'},
