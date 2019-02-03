@@ -1,5 +1,5 @@
 <template>
-    <v-dialog max-width="600px">
+    <v-dialog max-width="600px" v-model="dialog">
         <v-btn flat slot="activator" class="success">add new project</v-btn>
         <v-card>
             <v-card-title>
@@ -13,7 +13,7 @@
                         <v-text-field :value="formatedDate" slot="activator" label="date" prepend-icon="date_range"></v-text-field>
                         <v-date-picker v-model="due"></v-date-picker>
                     </v-menu>
-                    <v-btn flat class="success right mx-0 mt-4" @click="submit">add project</v-btn>
+                    <v-btn flat class="success right mx-0 mt-4" @click="submit" :loading="loading">add project</v-btn>
                 </v-form>
             </v-card-text>
         </v-card>
@@ -32,12 +32,15 @@ export default {
             due: null,
             inputRules: [
                 V => V.length >= 3 || 'Minimum is 3'
-            ]
+            ],
+            loading: false,
+            dialog: false
         }
     },
     methods: {
         submit() {
             if(this.$refs.form.validate()){
+                this.loading = true;
                 const project = {
                     title: this.title,
                     content: this.content,
@@ -47,7 +50,9 @@ export default {
                 }
 
                 db.collection('projects').add(project).then(() => {
-                    console.log('added');
+                    this.loading = false;
+                    this.dialog = false;
+                    this.$emit('projectAdded');
                 });
             }
         }

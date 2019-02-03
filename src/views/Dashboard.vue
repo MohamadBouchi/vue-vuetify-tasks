@@ -48,7 +48,8 @@
 </template>
 
 <script>
-
+  import db from '@/fb';
+  
   export default {
     components: {
     },
