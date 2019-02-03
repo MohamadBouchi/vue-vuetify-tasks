@@ -3,7 +3,7 @@
     <h1 class="subheading grey--text">projects page</h1>
     <v-container class="my-5">
           <v-expansion-panel>
-            <v-expansion-panel-content v-for="project in myProjects" :key="project.title">
+            <v-expansion-panel-content v-for="project in myProjects" :key="project.id">
               <div slot="header">
                 {{ project.title }}
               </div>
@@ -20,19 +20,14 @@
 </template>
 
 <script>
-
+  import db from '@/fb';
+  
   export default {
     components: {
     },
     data() {
       return {
-          projects: [
-            { title: 'Design a new website', person: 'mohamed', due: '1st Jan 2019', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-            { title: 'Design a new second website', person: 'mohamed', due: '11st Jan 2019', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-            { title: 'Code up the homepage', person: 'Chun Li', due: '10th Jan 2019', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-            { title: 'Design video thumbnails', person: 'Ryu', due: '20th Dec 2018', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-            { title: 'Create a community forum', person: 'Gouken', due: '20th Oct 2018', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-          ]
+          projects: []
       }
     },
     computed: {
@@ -41,6 +36,20 @@
           return project.person === 'mohamed'
         });
       }
+    },
+    created() {
+      db.collection('projects').onSnapshot(res => {
+        const changes = res.docChanges();
+
+        changes.forEach(change => {
+          if (change.type === 'added'){
+            this.projects.push({
+              ...change.doc.data(),
+              id: change.doc.id
+            })
+          }
+        })
+      })
     }
   }
 </script>
